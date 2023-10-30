@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TAU-CARGO Авторизация</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1, h2 {
+      margin-bottom: 20px;
+      color: #333333;
+    }
+
+    form {
+      margin-top: 30px;
+    }
+
+    input {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #message {
+      margin-top: 20px;
+      color: #333333;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #888888;
+    }
+
+    .exchange-rate {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 20px;
+      background-color: #aad9ff;
+      color: #ffffff;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TAU-CARGO</h1>
+    <h2>Авторизация</h2>
+    <form id="login-form">
+      <input type="text" id="phone-input" placeholder="Номер телефона">
+      <br>
+      <input type="password" id="password-input" placeholder="Пароль">
+      <br>
+      <button type="submit">Войти</button>
+    </form>
+
+    <div id="message"></div>
+
+    <div class="footer">
+      <div>Адрес: <a href="geo:43.235906, 76.914536">г. Алматы, Улица Пушкина 59</a></div>
+      <div>Контакты: 87ххххххххх</div>
+    </div>
+
+    <div id="exchange-rate" class="exchange-rate"></div>
+  </div>
+
+  <script>
+    var exchangeRateElement = document.getElementById('exchange-rate');
+
+    function updateExchangeRate() {
+      // Simulating API call to get the exchange rates
+      // Replace the following code with actual API request
+      fetch('https://api.exchangerate-api.com/v4/latest/USD')
+      .then(response => response.json())
+      .then(data => {
+        var exchangeRates = {
+          dollarToTenge: data.rates.KZT
+        };
+
+        var exchangeRateText =
+          'Курс валют: 1 доллар = ' +
+          exchangeRates.dollarToTenge.toFixed(2) +
+          ' тенге';
+
+        exchangeRateElement.innerText = exchangeRateText;
+      })
+      .catch(error => console.log(error));
+    }
+
+    setInterval(updateExchangeRate, 1000);
+
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var phone = document.getElementById('phone-input').value;
+      var password = document.getElementById('password-input').value;
+
+      var messageElement = document.getElementById('message');
+
+      if (phone === '87081551514' && password === '123456789') {
+        messageElement.innerText = 'Добро пожаловать в Tau-Cargo ' + phone + '!';
+        messageElement.style.color = 'green';
+        messageElement.style.display = 'block';
+      } else {
+        messageElement.innerText = 'Неверный номер или пароль';
+        messageElement.style.color = 'red';
+        messageElement.style.display = 'block';
+      }
+    });
+
+    // 2GIS API for route calculation
+    function calculateRoute() {
+      // Replace the following code with actual API request to 2GIS
+      var startPoint = 'Мое местоположение';
+      var endPoint = 'г. Алматы, Улица Пушкина 59';
+
+      window.location.href = 'https://2gis.kz/almaty/search/' + encodeURIComponent(endPoint);
+    }
+
+    document.querySelector('.footer a').addEventListener('click', calculateRoute);
+  </script>
+</body>
+</html>
